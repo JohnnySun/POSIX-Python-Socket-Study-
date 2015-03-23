@@ -72,10 +72,11 @@ int main(int argc, char **argv) {
 		s = getnameinfo((struct sockaddr *) &peer_addr,
 				peer_addr_len, host, NI_MAXHOST,
 				service, NI_MAXSERV, NI_NUMERICSERV);
-		if (s == 0)
+		if (s == 0) {
 			printf("Received %zd bytes from %s:%s\n",
 					nread, host, service);
-		else
+			printf("data is: %s\n", buf);
+		} else
 			fprintf(stderr, "getnameinfo: %s\n", gai_strerror(s));
 
 		if (sendto(sfd, buf, nread, 0,
