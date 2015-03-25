@@ -16,6 +16,7 @@ char *encrypt(char *message) {
 	uint64_t m_len = strlen(message);
 	//printf("n_len:%d, m_len:%d\n", (int)n_len, (int)m_len);
 	output = (char *)malloc(n_len + m_len);
+	memset(output, '\0', (n_len + m_len));
 
 	char *ciph = output;
 	memcpy(ciph, nonce, n_len);
@@ -42,6 +43,7 @@ char *decrypt(char *stream_ciph) {
 	uint64_t m_len = strlen(stream_ciph + n_len);
 	//printf("n_len:%d, m_len:%d\n", (int)n_len, (int)m_len);
 	output = (char *)malloc(m_len);
+	memset(output, '\0', (n_len + m_len));
 
 	char *message = output;
 

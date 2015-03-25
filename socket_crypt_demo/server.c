@@ -74,7 +74,8 @@ int main(int argc, char **argv) {
 		if (nread == -1)
 			continue;               /* Ignore failed request */
 
-		char *data = decrypt(buf);
+		char *data = NULL;
+		data = decrypt(buf);
 		char host[NI_MAXHOST], service[NI_MAXSERV];
 
 		s = getnameinfo((struct sockaddr *) &peer_addr,
@@ -91,6 +92,7 @@ int main(int argc, char **argv) {
 					(struct sockaddr *) &peer_addr,
 					peer_addr_len) != nread)
 			fprintf(stderr, "Error sending response\n");
+		free(data);
 	}
 	return 0;
 }
