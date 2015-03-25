@@ -12,8 +12,8 @@ char *encrypt(char *message) {
 	memset(key, '\0', sizeof(key));
 	strcpy(key,"test123");
 	randombytes_buf(nonce, sizeof nonce);
-	uint64_t n_len = crypto_stream_chacha20_NONCEBYTES * sizeof(nonce);
-	uint64_t m_len = strlen(message) * sizeof(message);
+	uint64_t n_len = crypto_stream_chacha20_NONCEBYTES;
+	uint64_t m_len = strlen(message);
 	//printf("n_len:%d, m_len:%d\n", (int)n_len, (int)m_len);
 	output = (char *)malloc(n_len + m_len);
 
@@ -38,8 +38,8 @@ char *decrypt(char *stream_ciph) {
 	memset(key, '\0', sizeof(key));
 	strcpy(key,"test123");
 	strncpy(nonce, stream_ciph, sizeof(nonce));
-	uint64_t n_len = crypto_stream_chacha20_NONCEBYTES * sizeof(nonce);
-	uint64_t m_len = strlen(stream_ciph + n_len) * sizeof(stream_ciph);
+	uint64_t n_len = crypto_stream_chacha20_NONCEBYTES;
+	uint64_t m_len = strlen(stream_ciph + n_len);
 	//printf("n_len:%d, m_len:%d\n", (int)n_len, (int)m_len);
 	output = (char *)malloc(m_len);
 
@@ -55,8 +55,8 @@ size_t get_crypt_len(char *stream_ciph) {
 
 	char nonce[crypto_stream_chacha20_NONCEBYTES];
 	strncpy(nonce, stream_ciph, sizeof(nonce));
-	uint64_t n_len = crypto_stream_chacha20_NONCEBYTES * sizeof(nonce);
-	uint64_t m_len = strlen(stream_ciph + n_len) * sizeof(stream_ciph);
+	uint64_t n_len = crypto_stream_chacha20_NONCEBYTES;
+	uint64_t m_len = strlen(stream_ciph + n_len);
 	//printf("n_len:%d, m_len:%d\n", (int)n_len, (int)m_len);
 	size_t len = (size_t)n_len + (size_t)m_len;
 	return len;

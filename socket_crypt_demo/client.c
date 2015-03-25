@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	if(argc < 3) {
+	if(argc < 4) {
 		fprintf(stderr, "Usage: %s host port msg...\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
