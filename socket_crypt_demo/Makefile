@@ -20,4 +20,4 @@ crypt.o: crypt.c
 	$(CC) -I. $(CFLAGS) -c $^ -o $@
 
 clean:
-	rm -rf client client.o server server.o
+	rm -rf client server *.o
