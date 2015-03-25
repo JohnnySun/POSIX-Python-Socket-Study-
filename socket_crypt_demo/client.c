@@ -2,11 +2,12 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-
-#define BUF_SIZE 500
+#include <sodium.h>
+#include "crypt.h"
 
 int main(int argc, char *argv[]) {
 	struct addrinfo hints;
@@ -16,10 +17,18 @@ int main(int argc, char *argv[]) {
 	ssize_t nread;
 	char buf[BUF_SIZE];
 
-	if (argc < 3) {
+
+	if(sodium_init() == -1) {
+		fprintf(stderr, "sodium_init failed.\n");
+		return 1;
+	}
+
+	if(argc < 3) {
 		fprintf(stderr, "Usage: %s host port msg...\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
+
+
 
 	/* Obtain address(es) matching host/port */
 
@@ -63,29 +72,31 @@ int main(int argc, char *argv[]) {
 	/* Send remaining command-line arguments as separate
 	 *               datagrams, and read responses from server */
 
-	for (j = 3; j < argc; j++) {
-		len = strlen(argv[j]) + 1;
-		/* +1 for terminating null byte */
+	char *massage = encrypt(argv[3]);
+	//char *massage1 = decrypt(massage);
+	//printf("%s\n", massage1);
+	len = get_crypt_len(massage);
+	
 
-		if (len + 1 > BUF_SIZE) {
-			fprintf(stderr,
-					"Ignoring long message in argument %d\n", j);
-			continue;
-		}
-
-		if (write(sfd, argv[j], len) != len) {
-			fprintf(stderr, "partial/failed write\n");
-			exit(EXIT_FAILURE);
-		}
-
-		nread = read(sfd, buf, BUF_SIZE);
-		if (nread == -1) {
-			perror("read");
-			exit(EXIT_FAILURE);
-		}
-
-		printf("Received %zd bytes: %s\n", nread, buf);
+	if (len + 1 > BUF_SIZE) {
+		fprintf(stderr,
+				"Ignoring long message in argument %d\n", j);
 	}
+
+
+	if (write(sfd, massage, len) != len) {
+		fprintf(stderr, "partial/failed write\n");
+		exit(EXIT_FAILURE);
+	}
+	free(massage);
+	nread = read(sfd, buf, BUF_SIZE);
+	if (nread == -1) {
+		perror("read");
+		exit(EXIT_FAILURE);
+	}
+
+	massage = decrypt(buf);
+	printf("Received %zd bytes: %s\n", nread, massage);
 
 	exit(EXIT_SUCCESS);
 }
