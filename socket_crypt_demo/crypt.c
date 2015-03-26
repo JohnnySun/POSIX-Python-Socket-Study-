@@ -45,7 +45,7 @@ char *decrypt(char *stream_ciph) {
 	printf("n_len:%d, m_len:%d\n", (int)n_len, (int)m_len);
 	output = (char *)malloc(m_len);
 	printf("0x%X\n", output);
-	memset(output, '\0', (n_len + m_len));
+	memset(output, '\0', m_len);
 
 	char *message = output;
 
