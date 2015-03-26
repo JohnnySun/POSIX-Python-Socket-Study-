@@ -92,7 +92,9 @@ int main(int argc, char **argv) {
 					(struct sockaddr *) &peer_addr,
 					peer_addr_len) != nread)
 			fprintf(stderr, "Error sending response\n");
-		free(data);
+		memset(buf, '\0', sizeof(buf));
+		free_buf();
+		//free(data);
 	}
 	return 0;
 }

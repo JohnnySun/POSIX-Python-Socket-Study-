@@ -6,5 +6,6 @@
 char *encrypt(char *);
 char *decrypt(char *);
 size_t  get_crypt_len(char *);
+void free_buf();
 
 #endif //_CRYPT_H

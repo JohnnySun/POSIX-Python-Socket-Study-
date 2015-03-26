@@ -2,12 +2,13 @@
 #include <string.h>
 #include <sodium.h>
 #include <crypt.h>
-
+static char *output = NULL
+;
 char *encrypt(char *message) {
 	/* encrypt */
 	char nonce[crypto_stream_chacha20_NONCEBYTES];
 	char key[crypto_stream_chacha20_KEYBYTES];
-	static char *output = NULL;
+	//static char *output = NULL;
 
 	memset(key, '\0', sizeof(key));
 	strcpy(key,"test123");
@@ -15,7 +16,7 @@ char *encrypt(char *message) {
 	uint64_t n_len = crypto_stream_chacha20_NONCEBYTES;
 	uint64_t m_len = strlen(message);
 	//printf("n_len:%d, m_len:%d\n", (int)n_len, (int)m_len);
-	output = (char *)malloc(n_len + m_len);
+	output = (char *)malloc(m_len);
 	memset(output, '\0', (n_len + m_len));
 
 	char *ciph = output;
@@ -34,15 +35,16 @@ char *decrypt(char *stream_ciph) {
 	char nonce[crypto_stream_chacha20_NONCEBYTES];
 	//printf("size:%d\n", crypto_stream_chacha20_NONCEBYTES);
 	char key[crypto_stream_chacha20_KEYBYTES];
-	static char *output = NULL;
+	//static char *output = NULL;
 
 	memset(key, '\0', sizeof(key));
 	strcpy(key,"test123");
 	strncpy(nonce, stream_ciph, sizeof(nonce));
 	uint64_t n_len = crypto_stream_chacha20_NONCEBYTES;
 	uint64_t m_len = strlen(stream_ciph + n_len);
-	//printf("n_len:%d, m_len:%d\n", (int)n_len, (int)m_len);
+	printf("n_len:%d, m_len:%d\n", (int)n_len, (int)m_len);
 	output = (char *)malloc(m_len);
+	printf("0x%X\n", output);
 	memset(output, '\0', (n_len + m_len));
 
 	char *message = output;
@@ -63,3 +65,8 @@ size_t get_crypt_len(char *stream_ciph) {
 	size_t len = (size_t)n_len + (size_t)m_len;
 	return len;
 }
+
+void free_buf() {
+	free(output);
+}
+

@@ -73,12 +73,12 @@ int main(int argc, char *argv[]) {
 	 *               datagrams, and read responses from server */
 
 	char *massage = encrypt(argv[3]);
-	//char *massage1 = decrypt(massage);
+	char *massage1 = decrypt(massage);
 	//printf("%s\n", massage1);
 	len = get_crypt_len(massage);
 	
 
-	if (len + 1 > BUF_SIZE) {
+	if (len > BUF_SIZE) {
 		fprintf(stderr,
 				"Ignoring long message in argument %d\n", j);
 	}
